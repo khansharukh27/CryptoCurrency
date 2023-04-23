@@ -1,21 +1,16 @@
 import React, { useEffect, useState } from 'react'
-// import axios from 'axios' 
 import './App.css';
 import Navbar from './Component/Navbar';
 import CoinD from './Component/CoinD';
-// import Main from './Component/Main';
 import TrendingChart from './Component/TrendingChart';
 import CurrencyExchange from './Component/CurrencyExchange';
 import Chart from './Component/Chart';
-// import { BrowserRouter, Route } from "react-router-dom";
-
-
 
 function App() {
-
   const [coins, setCoins] = useState([])
   const [search, setSearch] = useState("")
   const [currencies, setCurrencies] = useState(['usd'])
+
   async function MyApi() {
     try {
       const response = await fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currencies}&order=market_cap_desc&per_page=9&page=1&sparkline=false&price_change_percentage=1h&locale=en`)
@@ -26,6 +21,7 @@ function App() {
       console.error("Error:", error);
     }
   }
+
   useEffect(() => {
     MyApi();
   }, [currencies])
@@ -37,50 +33,56 @@ function App() {
 
   const filtredCoin = coins.filter((coin) =>
     coin.name.toLowerCase().includes(search.toLowerCase()));
-  
+
   return (
-    
     <div className="App">
       <div className='container-fluid'>
         <Navbar />
       </div>
-      <div className='container d-flex' style={{ backgroundColor: "azure" }}>
-        <div className='mt-2'>
-          <div className='d-flex '>
-            <div>
-            <select
-                className="form-select form-select-lg mb-3"
-                onChange={(e) => setCurrencies(e.target.value)}
-                style={{ width: "120px" }}
-   z           >
-                <option value="usd">USD</option>
-                <option value="eur">EUR</option>
-                <option value="jpy">JPY</option>
-                <option value="inr">INR</option>
+      <div className='container-fluid bg-light'>
+        <div className='row'>
+          <div className='col-lg-8 col-md-12 ms-5'>
+            <div className='row'>
+              <div className='col-md-3'>
+                <select
+                  className="form-select form-select-lg mb-3"
+                  onChange={(e) => setCurrencies(e.target.value)}
+                  style={{ width: "100%" }}>
+                  <option value="usd">USD</option>
+                  <option value="eur">EUR</option>
+                  <option value="jpy">JPY</option>
+                  <option value="inr">INR</option>
                 </select>
+              </div>
+              <div className='col-md-9'>
+                <form>
+                  <input key="id" className="form-control form-control-lg" type="text" placeholder="Search coin" aria-label=".form-control-lg example" onChange={handleSearchChange} />
+                </form>
+              </div>
             </div>
-            <div className='container-fluid '><form className='container-fluid ms-3'>
-              <input key="id" class="form-control form-control-lg" type="text" placeholder="Search coin" aria-label=".form-control-lg example" onChange={handleSearchChange} />
-            </form>
+            <div className='row'>
+              <div className='col-md-12'>
+                <div className='bg-white rounded p-3 mb-3'>
+                  <Chart name={filtredCoin[0]?.name} vName={currencies} />
+                </div>
+              </div>
+            </div>
+            <div className='row'>
+              <div className='col-md-7'>
+                <div className='bg-white rounded p-3 mb-3'>
+                  <TrendingChart />
+                </div>
+              </div>
+              <div className='col-md-5'>
+                <div className='bg-white rounded p-3 mb-3'>
+                  <CurrencyExchange />
+                </div>
+              </div>
+            </div>
 
-            </div>
-          </div>
-          <div className='m-1' style={{ boxShadow: '1px 2px 9px #F4AAB9',backgroundColor:"white" }}>
 
-            {/* <Main name={coins.name} /> */}
-            <Chart name={filtredCoin[0]?.name} vName={currencies} />
           </div>
-          <div className='d-flex'>
-            <div className='container-fluid m-2' style={{ boxShadow: '1px 2px 9px #F4AAB9',backgroundColor:"white" }}>
-              <TrendingChart />
-            </div>
-            <div className='container-fluid m-2' style={{ boxShadow: '1px 2px 9px #F4AAB9', backgroundColor:"white"}}>
-              <CurrencyExchange />
-            </div>
-          </div>
-          
-        </div>
-        <div className='ms-md-2 mt-2' style={{ boxShadow: '1px 2px 9px #F4AAB9',backgroundColor:"white" }}>
+          <div className=' col-md-3 ms-2 mt-2' style={{ boxShadow: '1px 2px 9px #F4AAB9', backgroundColor: "white" }}>
 
             <h1>Cryptocurrency by market cap</h1>
             {filtredCoin.map((coin) => {
@@ -91,10 +93,10 @@ function App() {
           </div>
 
 
-
+        </div>
       </div>
     </div>
-    )
-    }
-     
-    export default App;
+  )
+}
+
+export default App;
