@@ -15,7 +15,7 @@ function CurrencyExchange() {
       const response = await fetch(`https://api.coingecko.com/api/v3/exchange_rates`);
   const data = await response.json();
       setCryptoData(data.rates);
-    }
+    } 
     fetchData();
   }, []);
 
